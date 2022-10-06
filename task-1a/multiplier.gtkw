@@ -1,0 +1,35 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Thu Sep  1 09:36:30 2022
+[*]
+[timestart] 0
+[size] 1920 1126
+[pos] -1 -1
+*-11.000000 6170 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] testbench_gcd.
+[sst_width] 276
+[signals_width] 223
+[sst_expanded] 1
+[sst_vpaned_height] 340
+@22
+testbench_gcd.multiplier_i.a_i[3:0]
+testbench_gcd.multiplier_i.b_i[3:0]
+@28
+testbench_gcd.multiplier_i.busy_o
+testbench_gcd.multiplier_i.clk_i
+testbench_gcd.multiplier_i.cnt_sel
+testbench_gcd.multiplier_i.counter_n[1:0]
+testbench_gcd.multiplier_i.counter_p[1:0]
+testbench_gcd.multiplier_i.mux_sel[1:0]
+@22
+testbench_gcd.multiplier_i.result_n[7:0]
+testbench_gcd.multiplier_i.result_o[7:0]
+testbench_gcd.multiplier_i.result_p[7:0]
+@28
+testbench_gcd.multiplier_i.rst_i
+testbench_gcd.multiplier_i.start_i
+testbench_gcd.multiplier_i.state_n[1:0]
+testbench_gcd.multiplier_i.state_p[1:0]
+testbench_gcd.multiplier_i.valid_o
+[pattern_trace] 1
+[pattern_trace] 0

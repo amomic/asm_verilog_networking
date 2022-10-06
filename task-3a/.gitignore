@@ -1,0 +1,11 @@
+.vscode/**
+firewall
+*.o
+*.mod
+*.ko
+*.mod.c
+*.o.cmd
+*.mod.cmd
+*.ko.cmd
+Module.symvers
+modules.order
