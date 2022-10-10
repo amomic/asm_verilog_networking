@@ -25,6 +25,21 @@ module riscv_core(
   logic stdin_re;
   logic mem_we, stdin_we, stdout_we;
 
+
+  // Model selection signals for all peripherals/memory
+  always_comb begin
+    instr_mem_sel  = instr_addr >= `MEM_START    && instr_addr < `MEM_START + `MEM_SIZE;
+    mem_sel        = data_addr  >= `MEM_START    && data_addr  < `MEM_START + `MEM_SIZE;
+    stdin_sel      = data_addr  >= `STDIN_START  && data_addr  < `STDIN_START  + `STDIN_SIZE;
+    stdout_sel     = data_addr  >= `STDOUT_START && data_addr  < `STDOUT_START + `STDOUT_SIZE;
+  end
+
+  // Model read/write-enable signals for all peripherals
+  always_comb begin
+    stdin_re   = data_re & stdin_sel;
+    mem_we     = data_we & mem_sel;
+    stdin_we   = data_we & stdin_sel;
+    stdout_we  = data_we & stdout_sel;
   end
 
   // Model output logic
@@ -70,16 +85,5 @@ module riscv_core(
     .write_i(stdout_we),
     .din_i(data_wdata)
   );
-  //BEGIN_STUDNET
-  gcd_peripheral gcd_peripheral_i(
-    .clk_i(clk_i),
-    .reset_i(reset_i),
-    .data_addr_i(data_addr),
-    .data_we_i(gcd_we),
-    .data_wdata_i(data_wdata),
-    .data_rdata_o(gcd_rdata),
-    .irq_o(gcd_irq)
-  );
-  //END_STUDENT
 endmodule
 
