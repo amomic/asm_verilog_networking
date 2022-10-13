@@ -68,6 +68,8 @@ module testbench_gcd ();
         #200
         $finish();
       end
+
+      wait(!valid); // reset cycle
     end
   end
 
