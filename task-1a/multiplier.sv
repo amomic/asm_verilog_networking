@@ -29,7 +29,7 @@ always_ff @(posedge clk_i, posedge rst_i) begin
   if(rst_i == 1) begin
     result_present <= 8'b00000000;
     result_next <= 8'b00000000;
-  end;
+  end
   else begin
     result_present <= result_next;
   end
@@ -39,7 +39,7 @@ always_ff @(posedge clk_i, posedge rst_i) begin
   if(rst_i == 1) begin
     counter_present <= 8'b00000000;
     counter_next <= 8'b00000000;
-  end;
+  end
   else begin
     counter_present <= counter_next;
   end; 
@@ -102,7 +102,7 @@ always_comb begin
       busy_o = 0;
       valid_o = 1;
       result_next = result_present;
-      counter_next = b'b00000000;
+      counter_next = 8'b00000000;
       if(start_i == 1) begin
         result_next = 8'b00000000;
       end
