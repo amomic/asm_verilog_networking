@@ -15,7 +15,7 @@ logic [7:0] result_present, result_next;
 logic [7:0] counter_present, counter_next;
 
 
-//clock ticking cpu
+//clock and reset
 always_ff @(posedge clk_i, posedge rst_i) begin
   if(rst_i == 1) begin
     state_present <= INIT;
