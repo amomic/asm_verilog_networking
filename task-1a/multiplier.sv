@@ -15,37 +15,23 @@ logic [7:0] result_present, result_next;
 logic [7:0] counter_present, counter_next;
 
 
-//clock and reset
+//state register
 always_ff @(posedge clk_i, posedge rst_i) begin
   if(rst_i == 1) begin
     state_present <= INIT;
+    result_present <= 8'b00000000;
+    result_next <= 8'b00000000;
+    counter_present <= 8'b00000000;
+    counter_next <= 8'b00000000;
     end
   else begin
     state_present <= state_next;
+    result_present <= result_next;
+    counter_present <= counter_next;
   end  
 end
 
-always_ff @(posedge clk_i, posedge rst_i) begin
-  if(rst_i == 1) begin
-    result_present <= 8'b00000000;
-    result_next <= 8'b00000000;
-  end
-  else begin
-    result_present <= result_next;
-  end
-end
-
-always_ff @(posedge clk_i, posedge rst_i) begin
-  if(rst_i == 1) begin
-    counter_present <= 8'b00000000;
-    counter_next <= 8'b00000000;
-  end
-  else begin
-    counter_present <= counter_next;
-  end; 
-end
-
-//next state calculation
+//next state logic
 always_comb begin
   state_next = state_present;
    case(state_present)
