@@ -40,7 +40,6 @@ assign result_o = result_next;
 assign busy_o = (state_present == CALC);
 assign valid_o = (state_present == DONE);
 
-
 //state machine
 always_comb begin
   state_next = state_present;
