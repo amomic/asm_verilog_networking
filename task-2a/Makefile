@@ -16,8 +16,8 @@ CPUROOT :=
 TEST_DIFFS = $(ASMSOURCES:$(ASMDIR)%.asm=$(SIMDIR)%.isa.diff) $(ASMSOURCES:$(ASMDIR)%.asm=$(SIMDIR)%.rtl.diff)
 
 IVERILOGFLAGS ?= -Wall -g2012 -Wno-sensitivity-entire-array -I$(MAKEFILEDIR)/ips
-RISCVASMFLAGS ?= -e $(MAKEFILEDIR)gcd_extension.py
-RISCVSIMFLAGS ?= --initial-pc 128 --abi --trace -e $(MAKEFILEDIR)gcd_extension.py --instructions 200
+RISCVASMFLAGS ?= -e $(MAKEFILEDIR)gcd_extension.py -e $(MAKEFILEDIR)mret_extension.py
+RISCVSIMFLAGS ?= --initial-pc 128 --abi --trace -e $(MAKEFILEDIR)gcd_extension.py -e $(MAKEFILEDIR)mret_extension.py --instructions 200
 GTKWAVESAVE   ?= $(MAKEFILEDIR)$(CPUNAME).gtkw
 
 ifeq (, $(shell which iverilog))

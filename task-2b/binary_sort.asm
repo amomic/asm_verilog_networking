@@ -37,6 +37,7 @@ _start:
 # Function: int binary_search(int* A, int low, int high, int x)
 #
 binary_search:
+  JALR zero, 0(ra)                # return;
 
 ###############################################################################
 # Function: void insertion_sort(int* A, int size)
