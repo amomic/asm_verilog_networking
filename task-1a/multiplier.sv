@@ -32,6 +32,7 @@ always_comb begin
       8'b00: counter_next = 0;
       8'b01: counter_next = counter_present + 1;
       8'b10: counter_next = counter_present;
+      default: counter_next = counter_present;
   endcase
 end
 
