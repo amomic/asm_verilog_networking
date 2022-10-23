@@ -38,7 +38,7 @@ end
 //output logic
 assign result_o = result_next;
 assign busy_o = (state_present == CALC);
-assign valid_o = (state_present == DONE);
+assign valid_o = (state_present == DONE);                           
 
 //state machine
 always_comb begin
@@ -93,5 +93,6 @@ always_ff @(posedge clk_i, posedge rst_i) begin
     counter_present <= counter_next;
   end  
 end
+
 
 endmodule
