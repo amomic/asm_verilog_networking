@@ -1,6 +1,7 @@
 
 module testbench_gcd ();
   logic         clk;
+  logic         watchdog;
   logic         reset;
   logic         start;
   logic [31:0]  a;
@@ -25,6 +26,10 @@ module testbench_gcd ();
 
   always begin
     #50 clk = ~clk;
+  end
+
+   always begin
+    #100000 watchdog = 1;
   end
 
   initial begin
@@ -58,7 +63,7 @@ module testbench_gcd ();
       start = 1;
       #120
       start = 0;
-      wait(valid);
+      wait(valid|watchdog);
       $display("gcd(%d, %d) = %d (expected %d)", a, b, result, expected_gcd);
       $fdisplay(outfile, "gcd(%d, %d) = %d (expected %d)", a, b, result, expected_gcd);
 
