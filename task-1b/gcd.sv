@@ -9,7 +9,7 @@ module gcd (
   output logic [31:0] result_o
 );
 
-enum logic [3:0] {INIT,SA, SB, S1, LOOP1, LOOP2, LOOP3, DONE} state_next, state_present;
+enum logic [4:0] {INIT,SA, SB, S1, LOOP1, LOOP2, LOOP3,IFinLOOP,BCHECK, DONE} state_next, state_present;
 logic [31:0] a_present, a_next, b_present, b_next, result_present, result_next, k_present, k_next;
 enum logic [3:0] {INPUT_A, SWAP_A, CURRENT_A, A_CALC} a_mux;
 enum logic [3:0] {INPUT_B, SWAP_B, CURRENT_B, B_CALC} b_mux;
@@ -86,7 +86,7 @@ always_comb begin
 
       LOOP1: begin
         busy_o = 1'b1;
-        if(((a_present|b_present)& 2'b01)== 1) begin
+        if(((a_present|b_present)& 2'b01)== 0) begin
           a_mux = A_CALC;
           b_mux = B_CALC;
           k_next = k_present + 31'b01;
@@ -111,19 +111,21 @@ always_comb begin
         if((b_present & 1'b1) == 0) begin
           b_mux = B_CALC;
         end
-        
+        else begin
+          state_next = IFinLOOP;
+        end
+      end
+
+      IFinLOOP:begin
         if(a_present > b_present) begin
           a_mux = SWAP_A;
           b_mux = SWAP_B;
         end
-        else begin
-          b_next = b_present - a_present;
-        end
-        
-         if(b_next == a_present) begin
-          b_next = b_present - a_present;
-         end
-      
+        b_next = b_present - a_present;
+        state_next = BCHECK;
+      end
+
+      BCHECK: begin 
         if(b_present != 0) begin
           state_next = LOOP3;
         end
@@ -135,16 +137,14 @@ always_comb begin
 
       DONE: begin
         busy_o = 1'b0;
-        a_mux = CURRENT_A;
-        b_mux = CURRENT_B;
-        res_mux = RESULT_CURRENT;
-
-        if(start_i) begin
+        valid_o = 1'b1;
+         if(start_i) begin
           res_mux = R0;
           state_next = SA;
         end
         valid_o = 1'b1;
         state_next = INIT;
+
       end
 
       default:begin
