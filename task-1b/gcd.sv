@@ -138,11 +138,7 @@ always_comb begin
       DONE: begin
         busy_o = 1'b0;
         valid_o = 1'b1;
-         if(start_i) begin
-          res_mux = R0;
-          state_next = SA;
-        end
-        valid_o = 1'b1;
+        res_mux = RESULT_CURRENT;
         state_next = INIT;
 
       end
