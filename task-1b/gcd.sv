@@ -167,7 +167,6 @@ always_comb begin
     endcase
 end
 
-
 always_comb begin
   case(b_mux)
     INPUT_B: b_next = b_i;
