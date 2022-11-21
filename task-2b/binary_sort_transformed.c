@@ -15,6 +15,46 @@ size_t s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11;
 // int binary_search(int* A, int low, int high, int x)
 void binary_search()
 {
+   int m = 0; //m
+   a2 = m;
+
+   size_t stacked_s1 = s1; //low
+   t1 = s1;
+
+   size_t stacked_s2 = s2; //high
+   t2 = s2;
+
+   size_t stacked_s3 = s3; //x
+   t3 = s3;
+
+
+   if(t1<=t2) goto input_continue;
+   if(t3<=a0) goto if_continue;
+   a0 = s1;
+   return;
+
+   input_continue:
+   m = (s1+s2)/2;
+   if(t3 != a0) goto input_if_continue;
+   a0 = a2;
+   return;
+
+   if_continue:
+   a0 = s1 +1;
+   return;
+    
+   input_if_continue: 
+    if (t3<a0) goto calculation_one;
+    goto calculation_two; 
+
+    calculation_one: //
+    return;
+
+    calculation_two: //
+    return;
+
+  size_t t6 = -1;
+  a0 = t6;
   return;
 }
 
@@ -22,6 +62,7 @@ void binary_search()
 // void insertion_sort(int* A, int size)
 void insertion_sort()
 {
+
   return;
 }
 
