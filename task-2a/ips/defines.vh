@@ -27,4 +27,6 @@
 //BEGIN_STUDENT
 `define GCD_START        32'h000007d0
 `define GCD_SIZE         32'h10
+`define GCD_VALID        32'h00000010
+`define GCD_BUSY         32'h00000001
 //END_STUDENT

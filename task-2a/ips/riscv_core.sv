@@ -20,10 +20,12 @@ module riscv_core(
   logic [31:0] mem_data_rdata;
   logic [31:0] mem_instr_rdata;
   logic [31:0] stdin_rdata;
+  input logic rst_i;
+  output logic [31:0] data_rdata_o;
 
-  logic instr_mem_sel, mem_sel, stdin_sel, stdout_sel;
-  logic stdin_re;
-  logic mem_we, stdin_we, stdout_we;
+  logic instr_mem_sel, mem_sel, stdin_sel, stdout_sel, gcd_sel;
+  logic stdin_re,gcd_re;
+  logic mem_we, stdin_we, stdout_we,gcd_we;
 
 
   // Model selection signals for all peripherals/memory
@@ -32,14 +34,18 @@ module riscv_core(
     mem_sel        = data_addr  >= `MEM_START    && data_addr  < `MEM_START + `MEM_SIZE;
     stdin_sel      = data_addr  >= `STDIN_START  && data_addr  < `STDIN_START  + `STDIN_SIZE;
     stdout_sel     = data_addr  >= `STDOUT_START && data_addr  < `STDOUT_START + `STDOUT_SIZE;
+    gcd_sel        = data_addr  >= `GCD_START    && data_addr  < `GCD_START + `GCD_SIZE;
   end
 
   // Model read/write-enable signals for all peripherals
   always_comb begin
     stdin_re   = data_re & stdin_sel;
+    gcd_re     = data_re & gcd_sel;
     mem_we     = data_we & mem_sel;
     stdin_we   = data_we & stdin_sel;
     stdout_we  = data_we & stdout_sel;
+    gcd_we     = data_we & gcd_sel;
+
   end
 
   // Model output logic
@@ -50,6 +56,7 @@ module riscv_core(
 
     if (mem_sel)        data_rdata = mem_data_rdata;
     else if (stdin_sel) data_rdata = stdin_rdata;
+    else if(gcd_sel)    data_rdata = gcd_rdata;
     else                data_rdata = {32{1'bx}};
   end
 
@@ -85,5 +92,12 @@ module riscv_core(
     .write_i(stdout_we),
     .din_i(data_wdata)
   );
+
+  gcd gcd_input(
+    .clk_i(clk_i),
+    .reset_i(rst_i),
+    .data_rdata_o(gcd_rdata)
+  );
+
 endmodule
 
