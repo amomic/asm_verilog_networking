@@ -10,6 +10,7 @@ module riscv_core(
   logic [31:0] instr_addr;   // Address, word aligned
   logic [31:0] instr_rdata;  // Data read from memory
 
+
   // Data memory interface
   logic        data_we;      // Write Enable, high for writes
   logic        data_re;      // Read Enable, high for reads

@@ -16,7 +16,7 @@
 `define PAR_IN_SIZE    32'h8
 
 `define PAR_OUT_START   32'h000007f4
-`define PAR_OUT_SIZE    32'h8
+`define PAR_OUT_SIZE    32'h8 
 
 `define STDOUT_START   32'h000007fc
 `define STDOUT_SIZE    32'h4
@@ -29,4 +29,5 @@
 `define GCD_SIZE         32'h10
 `define GCD_VALID        32'h00000010
 `define GCD_BUSY         32'h00000001
+
 //END_STUDENT

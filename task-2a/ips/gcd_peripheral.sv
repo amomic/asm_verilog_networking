@@ -40,6 +40,7 @@ end
     addr[data_addr_i + 1],
     addr[data_addr_i]
   };
+  
 
 
   always_ff @(posedge clk_i)
