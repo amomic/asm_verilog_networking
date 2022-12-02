@@ -15,47 +15,112 @@ size_t s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11;
 // int binary_search(int* A, int low, int high, int x)
 void binary_search()
 {
+    size_t saved_s1 = s1;
+    size_t saved_s2 = s2;
+    size_t saved_s3 = s3;
+    size_t saved_s4 = s4;
+    size_t saved_s5 = s5;
     size_t saved_s6 = s6;
-    saved_s6 = 0; //m
-    size_t saved_s7 = s7; //for division by shifting
-    saved_s7 = 2;
-    size_t saved_s8 =s8;
+    size_t saved_s7 = s7;
+    size_t saved_s8 = s8;
     size_t saved_s9 = s9;
+    size_t saved_s10 = s10;
 
+    saved_s7 = a0;
+    saved_s8 = a1;
+    t2 = 0; //m
+    t3 = -1; //shift
 
-    if(a2 <= a3) goto inside_first_if;
+    if(saved_s1<= saved_s6) goto inside_first_if;
     goto first_else;
 
-    inside_first_if: saved_s6 = a2+a3;
-    saved_s6 = saved_s6 >> saved_s7;
+    inside_first_if: t2 = saved_s8+saved_s6;
+    t2 = t2 >> 2;
 
-    saved_s8 = a0+saved_s6;
-    if(a4 != saved_s8) goto second_else;
-    a0 = saved_s6;
+    saved_s9 = a0+t2;
+    if(saved_s2 != saved_s9) goto second_else;
+    s1 = saved_s1;
+    s2 = saved_s2;
+    s3 = saved_s3;
+    s4 = saved_s4;
+    s5 = saved_s5;
+    s6 = saved_s6;
+    s7 = saved_s7;
+    s8 = saved_s8;
+    s9 = saved_s9;
+    s10 = saved_s10;
     return;
 
     first_else: 
-    saved_s9 = a0 + a2;
-    if(a4>saved_s9) goto ret1;
-    a0 = a2;
+    saved_s10 = saved_s7+saved_s8;
+    if(saved_s2>saved_s10) goto ret1;
+    a0 = saved_s8;
+    s1 = saved_s1;
+    s2 = saved_s2;
+    s3 = saved_s3;
+    s4 = saved_s4;
+    s5 = saved_s5;
+    s6 = saved_s6;
+    s7 = saved_s7;
+    s8 = saved_s8;
+    s9 = saved_s9;
+    s10 = saved_s10;
     return;
 
-    ret1: a0 = a2+1;
+    ret1: a0 = s8+1;
+    s1 = saved_s1;
+    s2 = saved_s2;
+    s3 = saved_s3;
+    s4 = saved_s4;
+    s5 = saved_s5;
+    s6 = saved_s6;
+    s7 = saved_s7;
+    s8 = saved_s8;
+    s9 = saved_s9;
+    s10 = saved_s10;
     return;
 
-    second_else: if(a4 < saved_s8) goto ret2;
-    a2 = saved_s6+1;
+    second_else: if(saved_s2 < saved_s9) goto ret2;
+    t2 = t2 +1;
+    a0 = saved_s7;
+    a1 = t2;
+    a2 = saved_s6;
+    a3 = saved_s2;
     binary_search();
-    a0 = a0;
+    s1 = saved_s1;
+    s2 = saved_s2;
+    s3 = saved_s3;
+    s4 = saved_s4;
+    s5 = saved_s5;
+    s6 = saved_s6;
+    s7 = saved_s7;
+    s8 = saved_s8;
+    s9 = saved_s9;
+    s10 = saved_s10;
     return;
 
-
-    ret2: a3 = saved_s6 -1;
+    ret2:
+    a0 = saved_s7;
+    a1 = saved_s8;
+    s11 = t2+t3;
+    a2 = s11;
+    a3 = saved_s2;
     binary_search();
-    a0 = a0;
+    saved_s4 = a0;
+    a0 = saved_s4;
+    s1 = saved_s1;
+    s2 = saved_s2;
+    s3 = saved_s3;
+    s4 = saved_s4;
+    s5 = saved_s5;
+    s6 = saved_s6;
+    s7 = saved_s7;
+    s8 = saved_s8;
+    s9 = saved_s9;
+    s10 = saved_s10;
     return;
 
-return -1;
+return (void)-1;
 
 }
 
@@ -69,12 +134,11 @@ void insertion_sort()
     size_t saved_s3 = s3; //idx
     size_t saved_s4 = s4; //Aidx
     size_t saved_s5 = s5; //ai
+    size_t saved_s6 = s6; //j
     t0 = 0; //explicit counter j
-    t1 = 0; // current index
-    t2 = 2; // for shifting
     t4 = 0; // temp for storing Aj
-    t5 = 0; // temp for Aidx
-    t6 = 0; //temp for storing Ai
+    t5 = 0; // temp for idx
+    t6 = 0; //temp 
     goto for_loop;
 
     for_loop: if(t0<a0) goto inside_for;
@@ -83,21 +147,20 @@ void insertion_sort()
     s3 = saved_s3;
     s4 = saved_s4;
     s5 = saved_s5;
+    s6 = saved_s6;
     return;
 
-    inside_for: t1 = t0;
-    t1 = t1 << t2;
-
-    t4 = a1 + t1;
-    saved_s2 = *(int*)t4;
+    inside_for: t0 = t0+4;
+    saved_s6 = t0;
+    t4 = a1 + t0;
+    saved_s2 = t4;
 
     a2 = 0;
     a3 = t1;
     a4 = saved_s2;
     binary_search();
-    saved_s3 = a0;
 
-    saved_s1 = t1;
+    saved_s1 = t0;
 
     goto while_loop;
 
@@ -106,14 +169,21 @@ void insertion_sort()
 
     inside_while: saved_s1 = saved_s1 -1;
     t6 = a1 + saved_s1;
-    saved_s5 = *(int*)t6;
-    if(saved_s1<=saved_s3) goto lower_for;
+    saved_s5 = t6;
+    if(saved_s5<=saved_s3) goto lower_for;
     goto while_loop;
 
     lower_for:  t5 = a1 + saved_s3;
-    t5 = saved_s2;
+    saved_s2 = t5;
     goto for_loop;
 
+
+s1 = saved_s1;
+s2 = saved_s2;
+s3 = saved_s3;
+s4 = saved_s4;
+s5 = saved_s5;
+s6 = saved_s6;
   return;
 }
 
