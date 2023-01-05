@@ -132,7 +132,6 @@ FilterResponse processPacket(uint8_t const* packetData, size_t packetSize, Direc
             if (counter_out % 3 == 0)
             {
                 response = DROP;
-                
             }
         }
      
@@ -142,8 +141,7 @@ FilterResponse processPacket(uint8_t const* packetData, size_t packetSize, Direc
             if (counter_in % 4 == 0)
             {
                 response = DROP;
-                
-               
+
             }
         }
     
@@ -166,8 +164,7 @@ FilterResponse processPacket(uint8_t const* packetData, size_t packetSize, Direc
         if(direction==OUTGOING && port443)
         {
             response = DROP;
-            
-            
+              
         }
 
         if(direction == OUTGOING && port80)
@@ -185,6 +182,6 @@ FilterResponse processPacket(uint8_t const* packetData, size_t packetSize, Direc
         }
 
     }
-    
+
     return response;
 }
