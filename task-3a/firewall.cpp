@@ -114,9 +114,7 @@ FilterResponse processPacket(uint8_t const* packetData, size_t packetSize, Direc
         private_addr_out = true;
     }
 
-
-
-     if((ip.ip_src[0] == (uint8_t)10) ||( ip.ip_src[0] == (uint8_t)192 && (ip.ip_src[1]== (uint8_t)168)) || ((ip.ip_src[0] == (uint8_t)172 && ((ip.ip_src[1]>= (uint8_t)16 && ip.ip_src[1] <= (uint8_t)31) ))))
+    if((ip.ip_src[0] == (uint8_t)10) ||( ip.ip_src[0] == (uint8_t)192 && (ip.ip_src[1]== (uint8_t)168)) || ((ip.ip_src[0] == (uint8_t)172 && ((ip.ip_src[1]>= (uint8_t)16 && ip.ip_src[1] <= (uint8_t)31) ))))
     {
         private_addr_in = true;
     }
