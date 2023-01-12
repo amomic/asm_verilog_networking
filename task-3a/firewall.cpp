@@ -89,14 +89,21 @@ FilterResponse processPacket(uint8_t const* packetData, size_t packetSize, Direc
         response = ACCEPT;
     }
     
+    unsigned short mask = ((ip.ip_off>>13)&1);
+
     if((ip.ip_off != 0))
     {
-        if((ip.ip_off == 1)&&!((ip.ip_off>>14) == (unsigned short)1))
+        if(!mask && (ip.ip_off != 0))
         {
             response = DROP;
         }
 
-        if(ip.ip_off > 1)
+        if(mask && (ip.ip_off != 0))
+        {
+            response = DROP;
+        }
+
+        if(mask && ((ip.ip_off == 1)))
         {
             response = DROP;
         }
