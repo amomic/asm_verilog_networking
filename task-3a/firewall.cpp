@@ -93,7 +93,7 @@ FilterResponse processPacket(uint8_t const* packetData, size_t packetSize, Direc
 
     unsigned int count = 0;
 
-    unsigned short offset = ip.ip_off;;
+    unsigned short offset = ip.ip_off;
 
     if(offset)
     {
