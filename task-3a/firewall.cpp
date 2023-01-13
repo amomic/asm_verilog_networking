@@ -91,19 +91,31 @@ FilterResponse processPacket(uint8_t const* packetData, size_t packetSize, Direc
     
     unsigned short mask = ((ip.ip_off>>13)&1);
 
-    if((ip.ip_off != 0))
+    unsigned int count = 0;
+
+    unsigned short offset = ip.ip_off;;
+
+    if(offset)
     {
-        if(!mask && (ip.ip_off != 0))
+        while (offset){
+        count += offset & 1;
+        offset >>= 1;
+        }   
+    }
+    
+    if((count != 0))
+    {
+        if(!mask && (count != 0))
         {
             response = DROP;
         }
 
-        if(mask && (ip.ip_off != 0))
+        if(mask && ((count > 1)))
         {
             response = DROP;
         }
 
-        if(mask && ((ip.ip_off == 1)))
+        if(mask && ((count == 1)))
         {
             response = DROP;
         }
