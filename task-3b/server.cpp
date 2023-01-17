@@ -21,8 +21,8 @@ void handleConnection(int fd, const char *remote_addr, uint16_t remote_port)
     MessageType currentMessage = INVALID;
     AVContext *context = nullptr;
     // TODO: find a way to generate session ids
-    //int session_id;
-    //int client_port;
+    //int session_id = rand();
+    //int client_port = remote_port;
     // Initially, the state is set to initialization
     // Refer to the assignment description for the state logic
     //ConnectionState currentState = INITIALIZATION;
@@ -65,12 +65,20 @@ void handleConnection(int fd, const char *remote_addr, uint16_t remote_port)
         {
             case OPTIONS:
             {
-// TODO: Implement this method!
+// TODO: Implement this method
+         
+                dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\nPublic: %s, %s, %s, %s, %s\r\n", statusCodes[0],statusDescriptions[0],cseq,messageTypes[0],messageTypes[1],messageTypes[2],messageTypes[3], messageTypes[5]);
                 break;
             }
             case DESCRIBE:
             {
 // TODO: Implement this method!
+                void* buf;
+                buf = av_mallocz(1024);
+                size_t info = getSDPInfo(filename_from_path(path), (char*)buf, sizeof(buf));
+                
+               
+                dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\nContent-Type: application/sdp\r\nContent-Length: %zu\r\n\r\nm=audio 0 RTP/AVP 14\r\no=- 0 0 IN IP4 127.0.0.1", statusCodes[0],statusDescriptions[0],cseq,sizeof(info));
                 break;
             } 
             case SETUP:
