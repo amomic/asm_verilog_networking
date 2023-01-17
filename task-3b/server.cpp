@@ -73,13 +73,12 @@ void handleConnection(int fd, const char *remote_addr, uint16_t remote_port)
             case DESCRIBE:
             {
 // TODO: Implement this method!
-                void* buf;
-                buf = av_mallocz(1024);
-                size_t info = getSDPInfo(filename_from_path(path), (char*)buf, sizeof(buf));
                 
-               
-                dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\nContent-Type: application/sdp\r\nContent-Length: %zu\r\n\r\nm=audio 0 RTP/AVP 14\r\no=- 0 0 IN IP4 127.0.0.1", statusCodes[0],statusDescriptions[0],cseq,sizeof(info));
+                char* buf[1024];
+                getSDPInfo(filename_from_path(path), (char*)buf, sizeof(buf));
+                dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\nContent-Type: application/sdp\r\nContent-Length: %zu\r\n\r\n%s", statusCodes[0],statusDescriptions[0],cseq,sizeof(info),(char*)buf);
                 break;
+
             } 
             case SETUP:
             {
