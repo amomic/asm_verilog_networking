@@ -66,7 +66,7 @@ void handleConnection(int fd, const char *remote_addr, uint16_t remote_port)
             case OPTIONS:
             {
 // TODO: Implement this method
-         
+
                 dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\nPublic: %s, %s, %s, %s, %s\r\n", statusCodes[0],statusDescriptions[0],cseq,messageTypes[0],messageTypes[1],messageTypes[2],messageTypes[3], messageTypes[5]);
                 break;
             }
@@ -75,18 +75,51 @@ void handleConnection(int fd, const char *remote_addr, uint16_t remote_port)
 // TODO: Implement this method!
                 
                 char* buf[1024];
-                getSDPInfo(filename_from_path(path), (char*)buf, sizeof(buf));
-                dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\nContent-Type: application/sdp\r\nContent-Length: %zu\r\n\r\n%s", statusCodes[0],statusDescriptions[0],cseq,sizeof(info),(char*)buf);
+                const char* desc = "Error";
+                 if(fileExists(filename_from_path(path)) == false)
+                {
+                    dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\n\r\n", statusCodes[1],statusDescriptions[1],cseq);
+                }
+                int b = getSDPInfo(filename_from_path(path), (char*)buf, sizeof(buf));
+                if(b == -1)
+                {
+                     dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\n", 500,desc,cseq);
+                }
+                if(b == 0)
+                {
+                    dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\nContent-Type: application/sdp\r\nContent-Length: %zu\r\n\r\n%s", statusCodes[0],statusDescriptions[0],cseq,sizeof(info),(char*)buf);
+                }
+                    
                 break;
 
             } 
             case SETUP:
             {
 // TODO: Implement this method!
-                if()
+        
                 char* buf[1024];
-                getSDPInfo(filename_from_path(path), (char*)buf, sizeof(buf));
-                dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\nSession: %d\r\n%s", statusCodes[0],statusDescriptions[0],cseq,session_id,info.lines[2]);
+                const char* desc = "Error";
+
+                if(fileExists(filename_from_path(path)) == false)
+                {
+                    dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\nSession: %d\r\n\r\n", statusCodes[1],statusDescriptions[1],cseq,session_id);
+                }
+
+                int b = getSDPInfo(filename_from_path(path), (char*)buf, sizeof(buf));
+                char* lines = search_for_header(&info, "Transport:");
+                if(fileExists(filename_from_path(path)) == false)
+                {
+                    dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\nSession: %d\r\n%s", 500,desc,cseq,session_id,lines);
+                }
+                if(b == 0)
+                {
+                    dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\nSession: %d\r\n%s", statusCodes[0],statusDescriptions[0],cseq,session_id,lines);
+                }
+                if(b==-1)
+                {
+                    dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\n\r\n", 500,desc,cseq);
+                }
+                   
                 break;
             }
             case PLAY:
