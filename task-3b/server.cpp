@@ -125,16 +125,19 @@ void handleConnection(int fd, const char *remote_addr, uint16_t remote_port)
             case PLAY:
             {
 // TODO: Implement this method!
+                dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\n\r\n", statusCodes[4],statusDescriptions[4],cseq);
                 break;
             } 
             case PAUSE:
             {
 // TODO: Implement this method!
+                dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\n\r\n", statusCodes[4],statusDescriptions[4],cseq);
                 break;
             }
             case TEARDOWN:
-            {
+            {   
 // TODO: Implement this method!
+                dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\n\r\n", statusCodes[4],statusDescriptions[4],cseq);
                 break;
             }
             default:
