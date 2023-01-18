@@ -25,7 +25,7 @@ void handleConnection(int fd, const char *remote_addr, uint16_t remote_port)
     //int client_port = remote_port;
     // Initially, the state is set to initialization
     // Refer to the assignment description for the state logic
-    //ConnectionState currentState = INITIALIZATION;
+    ConnectionState currentState = INITIALIZATION;
     int cseq;
     while(true)
     {
@@ -65,14 +65,12 @@ void handleConnection(int fd, const char *remote_addr, uint16_t remote_port)
         {
             case OPTIONS:
             {
-// TODO: Implement this method
 
-                dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\nPublic: %s, %s, %s, %s, %s\r\n", statusCodes[0],statusDescriptions[0],cseq,messageTypes[0],messageTypes[1],messageTypes[2],messageTypes[3], messageTypes[5]);
+                dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\nPublic: %s, %s, %s, %s, %s\r\n\r\n", statusCodes[0],statusDescriptions[0],cseq,messageTypes[0],messageTypes[1],messageTypes[2],messageTypes[3], messageTypes[5]);
                 break;
             }
             case DESCRIBE:
             {
-// TODO: Implement this method!
                 
                 char* buf[1024];
                 const char* desc = "Error";
@@ -83,7 +81,7 @@ void handleConnection(int fd, const char *remote_addr, uint16_t remote_port)
                 int b = getSDPInfo(filename_from_path(path), (char*)buf, sizeof(buf));
                 if(b == -1)
                 {
-                     dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\n", 500,desc,cseq);
+                     dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\n\r\n", 500,desc,cseq);
                 }
                 if(b == 0)
                 {
@@ -95,7 +93,7 @@ void handleConnection(int fd, const char *remote_addr, uint16_t remote_port)
             } 
             case SETUP:
             {
-// TODO: Implement this method!
+
         
                 char* buf[1024];
                 const char* desc = "Error";
@@ -114,6 +112,8 @@ void handleConnection(int fd, const char *remote_addr, uint16_t remote_port)
                 if(b == 0)
                 {
                     dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\nSession: %d\r\n%s", statusCodes[0],statusDescriptions[0],cseq,session_id,lines);
+                    currentState = READY;  
+                    
                 }
                 if(b==-1)
                 {
@@ -124,20 +124,42 @@ void handleConnection(int fd, const char *remote_addr, uint16_t remote_port)
             }
             case PLAY:
             {
-// TODO: Implement this method!
-                dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\n\r\n", statusCodes[4],statusDescriptions[4],cseq);
+                
+                if(currentState != READY)
+                {
+                    dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\n\r\n", statusCodes[3],statusDescriptions[3],cseq);
+
+                }else
+                {
+                    dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\n\r\n", statusCodes[4],statusDescriptions[4],cseq);
+                    currentState = PLAYING;
+                }
+                
                 break;
             } 
             case PAUSE:
             {
-// TODO: Implement this method!
+
                 dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\n\r\n", statusCodes[4],statusDescriptions[4],cseq);
                 break;
             }
             case TEARDOWN:
             {   
-// TODO: Implement this method!
-                dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\n\r\n", statusCodes[4],statusDescriptions[4],cseq);
+                if(session_id)
+                {
+                    session_id = 0;
+                }
+
+                if(currentState != (READY) && currentState != (PLAYING))
+                {
+                    dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\n\r\n", statusCodes[3],statusDescriptions[3],cseq);
+                }
+                else
+                {
+                    dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\n\r\n", statusCodes[4],statusDescriptions[4],cseq);
+                    currentState = INITIALIZATION;
+                }
+                
                 break;
             }
             default:
