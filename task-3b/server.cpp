@@ -79,7 +79,7 @@ void handleConnection(int fd, const char *remote_addr, uint16_t remote_port)
                     dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\n\r\n", statusCodes[1],statusDescriptions[1],cseq);
                 }
                 int b = getSDPInfo(filename_from_path(path), (char*)buf, sizeof(buf));
-                if(b == -1)
+                if(b != 0)
                 {
                      dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\n\r\n", 500,desc,cseq);
                 }
@@ -115,7 +115,7 @@ void handleConnection(int fd, const char *remote_addr, uint16_t remote_port)
                     currentState = READY;  
                     
                 }
-                if(b==-1)
+                if(b != 0)
                 {
                     dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\n\r\n", 500,desc,cseq);
                 }
