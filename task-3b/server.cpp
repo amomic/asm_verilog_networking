@@ -22,7 +22,7 @@ void handleConnection(int fd, const char *remote_addr, uint16_t remote_port)
     MessageType currentMessage = INVALID;
     AVContext *context = nullptr;
     // TODO: find a way to generate session ids
-    int session_id = rand();
+    int session_id = 0;
     int client_port = remote_port;
     int play_session_id = 0;
     // Initially, the state is set to initialization
@@ -99,6 +99,7 @@ void handleConnection(int fd, const char *remote_addr, uint16_t remote_port)
         
                 char* buf[1024];
                 const char* desc = "Error";
+                session_id++;
 
                 if(fileExists(filename_from_path(path)) == false)
                 {
@@ -152,14 +153,14 @@ void handleConnection(int fd, const char *remote_addr, uint16_t remote_port)
                             currentMessage = TEARDOWN;
                             break;
                         }
-                        counter++;
+                        //counter++;
                         uint64_t time = av_rescale_q(packet.duration,(context->inputStream->time_base), (AVRational){1,1000000});
                         rescalePacketTimestamps(avcontext, &packet);
                         sendAndFreePacket(avcontext,&packet);
                         usleep(time);
-                        printf("\ncounter first %d\n", counter);
+                        //printf("\ncounter first %d\n", counter);
                     };
-                    printf("\ncounter %d\n", counter);
+                   // printf("\ncounter %d\n", counter);
                 }
             } 
             case PAUSE:
@@ -173,6 +174,7 @@ void handleConnection(int fd, const char *remote_addr, uint16_t remote_port)
                 if(session_id)
                 {
                     session_id = 0;
+                    play_session_id = 0;
                 }
 
                 if(currentState != (READY) && currentState != (PLAYING))
@@ -182,6 +184,7 @@ void handleConnection(int fd, const char *remote_addr, uint16_t remote_port)
                 else
                 {
                     dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\n\r\n", statusCodes[4],statusDescriptions[4],cseq);
+                    deleteAVContext(context);
                     currentState = INITIALIZATION;
                 }
                 
