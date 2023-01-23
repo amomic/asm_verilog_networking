@@ -3,7 +3,7 @@
 #include <netinet/in.h>
 #include <signal.h>
 #include <stdio.h>
-
+#include <string.h>
 #include <sys/sendfile.h>
 #include <sys/socket.h>
 #include <unistd.h>
@@ -23,7 +23,7 @@ void handleConnection(int fd, const char *remote_addr, uint16_t remote_port)
     AVContext *context = nullptr;
     // TODO: find a way to generate session ids
     int session_id = 0;
-    int client_port = remote_port;
+    int client_port = 0;
     int play_session_id = 0;
     // Initially, the state is set to initialization
     // Refer to the assignment description for the state logic
@@ -81,6 +81,7 @@ void handleConnection(int fd, const char *remote_addr, uint16_t remote_port)
                     dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\n\r\n", statusCodes[1],statusDescriptions[1],cseq);
                 }
                 int b = getSDPInfo(filename_from_path(path), (char*)buf, sizeof(buf));
+            
                 if(b != 0)
                 {
                      dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\n\r\n", 500,desc,cseq);
@@ -108,6 +109,30 @@ void handleConnection(int fd, const char *remote_addr, uint16_t remote_port)
 
                 int b = getSDPInfo(filename_from_path(path), (char*)buf, sizeof(buf));
                 char* lines = search_for_header(&info, "Transport:");
+                bool flag = false;
+                char num[4] = {0};
+
+                int num_cntr = 0;
+                for(int i = 0; i < 1000; i++ )
+                {
+                    if (lines[i] == '=')
+                    {
+                        flag = true;
+                        continue;
+                    }
+
+                    if(flag)
+                    {
+                        num[num_cntr] = lines[i];
+                        num_cntr++;
+                    }
+                    if (lines[i] == '-')
+                        break;
+                }
+
+
+                client_port = atoi(num);
+
                 if(fileExists(filename_from_path(path)) == false)
                 {
                     dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\nSession: %d\r\n%s", 500,desc,cseq,session_id,lines);
@@ -115,6 +140,8 @@ void handleConnection(int fd, const char *remote_addr, uint16_t remote_port)
                 if(b == 0)
                 {
                     dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\nSession: %d\r\n%s", statusCodes[0],statusDescriptions[0],cseq,session_id,lines);
+                    AVContext *avcontext = createAVContext(filename_from_path(path),client_port);
+                    context = avcontext;
                     play_session_id = session_id;
                     currentState = READY;  
                     
@@ -142,26 +169,25 @@ void handleConnection(int fd, const char *remote_addr, uint16_t remote_port)
                 {
                    
                     dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\nSession: %d\r\n\r\n", statusCodes[0],statusDescriptions[0],cseq,session_id);
-                    AVContext *avcontext = createAVContext(filename_from_path(path),client_port);
                     currentState = PLAYING;
-                    context = avcontext;
                     AVPacket packet = {0};                    
                     while(true)
                     {
-                        if(readPacketFromContext(avcontext,&packet)!=0)
+                        if(readPacketFromContext(context,&packet)!=0)
                         {
                             currentMessage = TEARDOWN;
                             break;
                         }
-                        //counter++;
-                        uint64_t time = av_rescale_q(packet.duration,(context->inputStream->time_base), (AVRational){1,1000000});
-                        rescalePacketTimestamps(avcontext, &packet);
-                        sendAndFreePacket(avcontext,&packet);
+                        counter++;
+                        uint64_t time = av_rescale((&packet)->duration,(context->inputStream->time_base.num)*1000000,(context->inputStream->time_base.den));
+                        rescalePacketTimestamps(context, &packet);
+                        sendAndFreePacket(context,&packet);
                         usleep(time);
-                        //printf("\ncounter first %d\n", counter);
                     };
-                   // printf("\ncounter %d\n", counter);
+                
                 }
+
+                break;
             } 
             case PAUSE:
             {
