@@ -11,6 +11,7 @@
 #include "framework.h"
 #define BONUS_TASK
 #define RTSP_VERSION ("RTSP/1.0")
+int counter = 0;
 
 
 // Handle a server-client connection. This method is called 
@@ -22,7 +23,8 @@ void handleConnection(int fd, const char *remote_addr, uint16_t remote_port)
     AVContext *context = nullptr;
     // TODO: find a way to generate session ids
     int session_id = rand();
-    //int client_port = remote_port;
+    int client_port = remote_port;
+    int play_session_id = 0;
     // Initially, the state is set to initialization
     // Refer to the assignment description for the state logic
     ConnectionState currentState = INITIALIZATION;
@@ -112,6 +114,7 @@ void handleConnection(int fd, const char *remote_addr, uint16_t remote_port)
                 if(b == 0)
                 {
                     dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\nSession: %d\r\n%s", statusCodes[0],statusDescriptions[0],cseq,session_id,lines);
+                    play_session_id = session_id;
                     currentState = READY;  
                     
                 }
@@ -125,17 +128,39 @@ void handleConnection(int fd, const char *remote_addr, uint16_t remote_port)
             case PLAY:
             {
                 
+                if(session_id != play_session_id)
+                {
+                    dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\n\r\n", statusCodes[2],statusDescriptions[2],cseq);
+                }
+                
                 if(currentState != READY)
                 {
                     dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\n\r\n", statusCodes[3],statusDescriptions[3],cseq);
 
                 }else
                 {
-                    dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\n\r\n", statusCodes[4],statusDescriptions[4],cseq);
+                   
+                    dprintf(fd,"RTSP/1.0 %d %s\r\nCSeq: %d\r\nSession: %d\r\n\r\n", statusCodes[0],statusDescriptions[0],cseq,session_id);
+                    AVContext *avcontext = createAVContext(filename_from_path(path),client_port);
                     currentState = PLAYING;
+                    context = avcontext;
+                    AVPacket packet = {0};                    
+                    while(true)
+                    {
+                        if(readPacketFromContext(avcontext,&packet)!=0)
+                        {
+                            currentMessage = TEARDOWN;
+                            break;
+                        }
+                        counter++;
+                        uint64_t time = av_rescale_q(packet.duration,(context->inputStream->time_base), (AVRational){1,1000000});
+                        rescalePacketTimestamps(avcontext, &packet);
+                        sendAndFreePacket(avcontext,&packet);
+                        usleep(time);
+                        printf("\ncounter first %d\n", counter);
+                    };
+                    printf("\ncounter %d\n", counter);
                 }
-                
-                break;
             } 
             case PAUSE:
             {
